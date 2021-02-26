@@ -10,6 +10,10 @@ type UsersRepository struct {
 }
 
 func (ur *UsersRepository) Create(u *models.User) (*models.User, error) {
+	if err := u.BeforeCreate(); err != nil {
+		return nil, errors.Wrap(err, "could not add an user into db")
+	}
+
 	if err := ur.store.db.QueryRow(
 		"INSERT INTO users (email, encrypted_password) VALUES ($1, $2) RETURNING id",
 		u.Email,

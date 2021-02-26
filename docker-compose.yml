@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13.1
+    #restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: restapi_dev
+    ports: 
+      - 5432:5432
+    volumes:
+      - data:/mnt/Ark/db
+    networks:
+      node_net:
+        ipv4_address: 172.28.1.5
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    #restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@m.ru
+      PGADMIN_DEFAULT_PASSWORD: "Q123"
+    depends_on:
+      - postgres
+    networks:
+      node_net:
+        ipv4_address: 172.28.1.6
+
+volumes:
+  data:
+    name: data
+
+# networking for container
+networks:
+  node_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16    

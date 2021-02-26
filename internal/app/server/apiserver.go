@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
+	"github.com/sergeyzalunin/go-rest/internal/app/store"
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,6 +14,7 @@ type APIServer struct {
 	config *Config
 	logger *logrus.Logger
 	router *mux.Router
+	store  *store.Store
 }
 
 func New(config *Config) *APIServer {
@@ -29,6 +31,11 @@ func (a *APIServer) Start() error {
 	}
 
 	a.configRouter()
+
+	if err := a.configureStore(); err != nil {
+		return errors.Wrap(err, "could not configure storage")
+	}
+
 	a.logger.Info("starting server http://localhost:8080 ...")
 
 	return http.ListenAndServe(a.config.BindAddr, a.router)
@@ -42,6 +49,17 @@ func (a *APIServer) configureLogger() error {
 
 	a.logger.SetOutput(os.Stdout)
 	a.logger.SetLevel(level)
+
+	return nil
+}
+
+func (a *APIServer) configureStore() error {
+	st := store.New(a.config.Store)
+	if err := st.Open(); err != nil {
+		return errors.Wrap(err, "could not open database storage")
+	}
+	
+	a.store = st
 
 	return nil
 }

@@ -27,9 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	s := server.New(conf)
-
-	if err := s.Start(); err != nil {
+	if err := server.Start(conf); err != nil {
 		log.Fatal(err)
 	}
 }

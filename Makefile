@@ -9,6 +9,9 @@ run: build
 	./go-rest	
 
 test:
+	go test -race -timeout 30s ./...
+
+testv:
 	go test -v -race -timeout 30s ./...
 
 killshim:
@@ -34,5 +37,8 @@ migr-rollback:
 
 pgexec:
 	docker exec -it postgres psql -U admin -W 123 -d restapi_dev -h 172.28.1.5 -p 5432
+
+createuser:
+	curl -X 'POST' -H 'Content-Type: application/json' --data '{"email":"test1@ree.ru","password":"123456"}'  http://localhost:8080/users
 
 _DEFAULT_GO := run

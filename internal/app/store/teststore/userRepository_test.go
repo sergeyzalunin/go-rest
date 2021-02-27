@@ -9,6 +9,8 @@ import (
 )
 
 func TestUsersRepository_Create(t *testing.T) {
+	t.Parallel()
+	
 	s := New()
 
 	tu := models.TestUser(t)
@@ -18,6 +20,8 @@ func TestUsersRepository_Create(t *testing.T) {
 }
 
 func TestUsersRepository_FindByEmail(t *testing.T) {
+	t.Parallel()
+
 	e := "user@mail.go"
 	s := New()
 

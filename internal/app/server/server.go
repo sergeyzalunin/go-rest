@@ -6,9 +6,14 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 	"github.com/sergeyzalunin/go-rest/internal/app/models"
 	"github.com/sergeyzalunin/go-rest/internal/app/store"
 	"github.com/sirupsen/logrus"
+)
+
+const (
+	sessionName = "gosessionname"
 )
 
 var (
@@ -21,16 +26,18 @@ type request struct {
 }
 
 type server struct {
-	logger *logrus.Logger
-	router *mux.Router
-	store  store.Storer
+	logger        *logrus.Logger
+	router        *mux.Router
+	store         store.Storer
+	sessionsStore sessions.Store
 }
 
-func newServer(store store.Storer) *server {
+func newServer(store store.Storer, sessionsStore sessions.Store) *server {
 	s := &server{
-		logger: logrus.New(),
-		router: mux.NewRouter(),
-		store:  store,
+		logger:        logrus.New(),
+		router:        mux.NewRouter(),
+		store:         store,
+		sessionsStore: sessionsStore,
 	}
 
 	s.configureRouter()
@@ -93,6 +100,22 @@ func (s *server) handleSessionsCreate() http.HandlerFunc {
 
 		if !u.ComparePassword(req.Password) {
 			s.error(rw, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
+
+			return
+		}
+
+		session, err := s.sessionsStore.Get(r, sessionName)
+		if err != nil {
+			s.logger.Error(err)
+			s.error(rw, r, http.StatusInternalServerError, err)
+
+			return
+		}
+
+		session.Values["user_id"] = u.ID
+		
+		if err := s.sessionsStore.Save(r, rw, session); err != nil {
+			s.error(rw, r, http.StatusInternalServerError, err)
 
 			return
 		}

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/gorilla/sessions"
 	"github.com/pkg/errors"
 	"github.com/sergeyzalunin/go-rest/internal/app/store/sqlstore"
 )
@@ -17,7 +18,8 @@ func Start(config *Config) error {
 	defer db.Close()
 
 	store := sqlstore.New(db)
-	srv := newServer(store)
+	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
+	srv := newServer(store, sessionStore)
 
 	srv.logger.Info("starting server http://localhost:8080 ...")
 

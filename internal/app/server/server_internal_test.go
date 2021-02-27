@@ -7,12 +7,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/gorilla/sessions"
 	"github.com/sergeyzalunin/go-rest/internal/app/models"
 	"github.com/sergeyzalunin/go-rest/internal/app/store/teststore"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestServer_HandleUsersCreate(t *testing.T) {
+	sessionStore := sessions.NewCookieStore([]byte("config.SessionKey"))
+
 	tests := []struct {
 		name         string
 		payload      interface{}
@@ -48,7 +51,7 @@ func TestServer_HandleUsersCreate(t *testing.T) {
 
 			rec := httptest.NewRecorder()
 			req, _ := http.NewRequest(http.MethodPost, "/users", b)
-			s := newServer(teststore.New())
+			s := newServer(teststore.New(), sessionStore)
 			s.ServeHTTP(rec, req)
 
 			assert.Equal(t, tt.expectedCode, rec.Code)
@@ -57,10 +60,12 @@ func TestServer_HandleUsersCreate(t *testing.T) {
 }
 
 func Test_server_handleSessionsCreate(t *testing.T) {
+	sessionStore := sessions.NewCookieStore([]byte("config.SessionKey"))
+
 	u := models.TestUser(t)
 	ts := teststore.New()
 	ts.User().Create(u)
-	srv := newServer(ts)
+	srv := newServer(ts, sessionStore)
 
 	tests := []struct {
 		name         string

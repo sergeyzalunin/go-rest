@@ -7,6 +7,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type validateTestCase struct {
+	name    string
+	u       func() *models.User
+	wantErr bool
+}
+
 func TestUser_BeforeCreate(t *testing.T) {
 	t.Parallel()
 
@@ -18,11 +24,28 @@ func TestUser_BeforeCreate(t *testing.T) {
 func TestUser_Validate(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name    string
-		u       func() *models.User
-		wantErr bool
-	}{
+	tests := getValidateTestCases(t)
+
+	for _, tt := range tests {
+		tc := tt
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			tu := tc.u()
+
+			if tc.wantErr {
+				assert.Error(t, tu.Validate())
+			} else {
+				assert.NoError(t, tu.Validate())
+			}
+		})
+	}
+}
+
+func getValidateTestCases(t *testing.T) []validateTestCase {
+	t.Helper()
+
+	return []validateTestCase{
 		{
 			name: "valid",
 			u: func() *models.User {
@@ -71,16 +94,5 @@ func TestUser_Validate(t *testing.T) {
 			},
 			wantErr: false,
 		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tu := tt.u()
-
-			if tt.wantErr {
-				assert.Error(t, tu.Validate())
-			} else {
-				assert.NoError(t, tu.Validate())
-			}
-		})
 	}
 }

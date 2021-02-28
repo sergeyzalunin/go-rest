@@ -15,12 +15,13 @@ type User struct {
 }
 
 func (u *User) Validate() error {
+	minLen, maxLen := 6, 100
 	passRule := requiredIf(u.EncryptedPassword == "")
 
 	return validation.ValidateStruct(
 		u,
 		validation.Field(&u.Email, validation.Required, is.Email),
-		validation.Field(&u.Password, validation.By(passRule), validation.Length(6, 100)),
+		validation.Field(&u.Password, validation.By(passRule), validation.Length(minLen, maxLen)),
 	)
 }
 

@@ -21,9 +21,9 @@ func Start(config *Config) error {
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
 	srv := newServer(store, sessionStore)
 
-	srv.logger.Infof("starting server at http://localhost%s ...", config.BindAddr)
+	srv.logger.Infof("starting server at http://localhost:%s ...", config.BindAddr)
 
-	return http.ListenAndServe(config.BindAddr, srv)
+	return http.ListenAndServe(":"+config.BindAddr, srv)
 }
 
 func newDB(dbURL string) (*sql.DB, error) {

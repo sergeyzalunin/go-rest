@@ -10,8 +10,6 @@ import (
 )
 
 func TestUsersRepository_Create(t *testing.T) {
-	t.Parallel()
-
 	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("users")
 
@@ -24,8 +22,6 @@ func TestUsersRepository_Create(t *testing.T) {
 }
 
 func TestUsersRepository_FindByEmail(t *testing.T) {
-	t.Parallel()
-
 	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("users")
 
@@ -46,8 +42,6 @@ func TestUsersRepository_FindByEmail(t *testing.T) {
 }
 
 func TestUsersRepository_Find(t *testing.T) {
-	t.Parallel()
-
 	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("users")
 

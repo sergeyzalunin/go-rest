@@ -14,23 +14,17 @@ type validateTestCase struct {
 }
 
 func TestUser_BeforeCreate(t *testing.T) {
-	t.Parallel()
-
 	u := models.TestUser(t)
 	assert.NoError(t, u.BeforeCreate())
 	assert.NotEmpty(t, u.EncryptedPassword)
 }
 
 func TestUser_Validate(t *testing.T) {
-	t.Parallel()
-
 	tests := getValidateTestCases(t)
 
 	for _, tt := range tests {
 		tc := tt
 		t.Run(tc.name, func(t *testing.T) {
-			t.Parallel()
-
 			tu := tc.u()
 
 			if tc.wantErr {

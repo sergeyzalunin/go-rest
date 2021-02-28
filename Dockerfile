@@ -15,4 +15,4 @@ RUN go mod download
 
 RUN go build -o bin/go-rest ./cmd/server
 
-ENTRYPOINT [ "bin/go-rest" ]
+CMD [ "bin/go-rest" ]

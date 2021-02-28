@@ -62,6 +62,7 @@ func (s *server) configureRouter() {
 	s.router.Use(s.setRequestID)
 	s.router.Use(s.logRequest)
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
+	s.router.HandleFunc("/ping", s.handlePing()).Methods(http.MethodGet)
 	s.router.HandleFunc("/users", s.handleCreateUser()).Methods(http.MethodPost)
 	s.router.HandleFunc("/sessions", s.handleSessionsCreate()).Methods(http.MethodPost)
 
@@ -131,6 +132,12 @@ func (s *server) authenticateUser(next http.Handler) http.Handler {
 
 		next.ServeHTTP(rw, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
 	})
+}
+
+func (s *server) handlePing() http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		s.respond(rw, r, http.StatusOK, "pong")
+	}
 }
 
 func (s *server) handleCreateUser() http.HandlerFunc {

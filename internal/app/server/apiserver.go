@@ -21,7 +21,7 @@ func Start(config *Config) error {
 	sessionStore := sessions.NewCookieStore([]byte(config.SessionKey))
 	srv := newServer(store, sessionStore)
 
-	srv.logger.Info("starting server http://localhost:8080 ...")
+	srv.logger.Infof("starting server at http://localhost%s ...", config.BindAddr)
 
 	return http.ListenAndServe(config.BindAddr, srv)
 }

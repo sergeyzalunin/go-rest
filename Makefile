@@ -1,6 +1,7 @@
 db?="postgresql://admin:123@172.28.1.5/restapi_dev?sslmode=disable"
 name?=empty
 id?=0
+url?=https://go-rest-sergeyzalunin.herokuapp.com
 
 build:
 	go build -o go-rest -v ./cmd/server
@@ -39,12 +40,12 @@ pgexec:
 	docker exec -it postgres psql -U admin -W 123 -d restapi_dev -h 172.28.1.5 -p 5432
 
 createuser:
-	curl -X 'POST' -H 'Content-Type: application/json' --data '{"email":"test1@ree.ru","password":"123456"}'  http://localhost:8080/users
+	curl -X 'POST' -H 'Content-Type: application/json' --data '{"email":"example@mail.ru","password":"123456"}'  ${url}/users
 
 session:
-	http -v --session=user POST http://localhost:8080/sessions email=test1@ree.ru password=123456
+	http -v --session=user POST ${url}/sessions email=example@mail.ru password=123456
 
 whoami:
-	http -v --session=user http://localhost:8080/private/whoami "Origin: google.com"
+	http -v --session=user ${url}/private/whoami "Origin: google.com"
 
 .DEFAULT_GOAL := run

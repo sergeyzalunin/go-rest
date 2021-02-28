@@ -21,6 +21,10 @@ func main() {
 		conf.DatabaseURL = databaseURL
 	}
 
+	if bindAddr := os.Getenv("BIND_ADDR"); bindAddr != "" {
+		conf.BindAddr = bindAddr
+	}
+
 	if err := server.Start(conf); err != nil {
 		log.Fatal(err)
 	}

@@ -41,4 +41,10 @@ pgexec:
 createuser:
 	curl -X 'POST' -H 'Content-Type: application/json' --data '{"email":"test1@ree.ru","password":"123456"}'  http://localhost:8080/users
 
-_DEFAULT_GO := run
+session:
+	http -v --session=user POST http://localhost:8080/sessions email=test1@ree.ru password=123456
+
+whoami:
+	http -v --session=user http://localhost:8080/private/whoami "Origin: google.com"
+
+.DEFAULT_GOAL := run

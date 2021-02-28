@@ -6,7 +6,7 @@ func TestUser(t *testing.T) *User {
 	t.Helper()
 
 	return &User{
-		ID:                0,
+		ID:                100,
 		Email:             "user@example.org",
 		Password:          "password",
 		EncryptedPassword: "",

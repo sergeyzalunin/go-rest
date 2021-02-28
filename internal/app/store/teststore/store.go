@@ -17,7 +17,7 @@ func (s *Store) User() store.UserRepoHandler {
 	if s.userRepo == nil {
 		s.userRepo = &UserTestRepository{
 			store: s,
-			users: make(map[string]*models.User),
+			users: make(map[int]*models.User),
 		}
 	}
 

@@ -32,5 +32,27 @@ func TestUsersRepository_FindByEmail(t *testing.T) {
 	tu.Email = e
 
 	assert.NoError(t, s.User().Create(tu))
-	assert.NotNil(t, tu)
+	
+	u2, err := s.User().FindByEmail(tu.Email)
+	assert.NoError(t, err)
+	assert.NotNil(t, u2)
+}
+
+
+func TestUsersRepository_Find(t *testing.T) {
+	t.Parallel()
+
+	s := New()
+
+	_, err := s.User().Find(100)
+	assert.EqualError(t, err, store.ErrItemNotFound.Error())
+
+	tu := models.TestUser(t)
+	tu.Email = "user@mail.go"
+
+	assert.NoError(t, s.User().Create(tu))
+	
+	u2, err := s.User().Find(tu.ID)
+	assert.NoError(t, err)
+	assert.NotNil(t, u2)
 }

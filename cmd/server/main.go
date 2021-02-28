@@ -21,7 +21,7 @@ func main() {
 		conf.DatabaseURL = databaseURL
 	}
 
-	if bindAddr := os.Getenv("BIND_ADDR"); bindAddr != "" {
+	if bindAddr := os.Getenv("PORT"); bindAddr != "" {
 		conf.BindAddr = bindAddr
 	}
 

@@ -10,6 +10,8 @@ import (
 )
 
 func TestUsersRepository_Create(t *testing.T) {
+	t.Parallel()
+
 	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("users")
 
@@ -22,6 +24,8 @@ func TestUsersRepository_Create(t *testing.T) {
 }
 
 func TestUsersRepository_FindByEmail(t *testing.T) {
+	t.Parallel()
+
 	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("users")
 
@@ -35,13 +39,15 @@ func TestUsersRepository_FindByEmail(t *testing.T) {
 	tu.Email = e
 
 	assert.NoError(t, s.User().Create(tu))
-	
+
 	u2, err := s.User().FindByEmail(tu.Email)
 	assert.NoError(t, err)
 	assert.NotNil(t, u2)
 }
 
 func TestUsersRepository_Find(t *testing.T) {
+	t.Parallel()
+
 	db, teardown := sqlstore.TestDB(t, databaseURL)
 	defer teardown("users")
 
@@ -55,7 +61,7 @@ func TestUsersRepository_Find(t *testing.T) {
 	tu.Email = e
 
 	assert.NoError(t, s.User().Create(tu))
-	
+
 	u2, err := s.User().Find(tu.ID)
 	assert.NoError(t, err)
 	assert.NotNil(t, u2)

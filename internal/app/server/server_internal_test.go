@@ -49,7 +49,7 @@ func TestServer_HandleUsersCreate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &bytes.Buffer{}
-			json.NewEncoder(b).Encode(tt.payload)
+			_ = json.NewEncoder(b).Encode(tt.payload)
 
 			rec := httptest.NewRecorder()
 			req, _ := http.NewRequest(http.MethodPost, "/users", b)
@@ -66,7 +66,9 @@ func Test_server_handleSessionsCreate(t *testing.T) {
 
 	u := models.TestUser(t)
 	ts := teststore.New()
-	ts.User().Create(u)
+	if err := ts.User().Create(u); err != nil {
+		t.Error(err)
+	}
 	srv := newServer(ts, sessionStore)
 
 	tests := []struct {
@@ -108,7 +110,7 @@ func Test_server_handleSessionsCreate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := &bytes.Buffer{}
-			json.NewEncoder(b).Encode(tt.payload)
+			_ = json.NewEncoder(b).Encode(tt.payload)
 
 			rec := httptest.NewRecorder()
 			req, _ := http.NewRequest(http.MethodPost, "/sessions", b)
@@ -122,7 +124,9 @@ func Test_server_handleSessionsCreate(t *testing.T) {
 func TestServer_AuthenticateUser(t *testing.T) {
 	u := models.TestUser(t)
 	ts := teststore.New()
-	ts.User().Create(u)
+	if err := ts.User().Create(u); err != nil {
+		t.Error(err)
+	}
 
 	tests := []struct {
 		name         string

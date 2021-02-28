@@ -43,7 +43,7 @@ func (ur *UserRepository) Find(id int) (*models.User, error) {
 		&u.Email,
 		&u.EncryptedPassword,
 	); err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrItemNotFound
 		}
 
@@ -64,7 +64,7 @@ func (ur *UserRepository) FindByEmail(email string) (*models.User, error) {
 		&u.Email,
 		&u.EncryptedPassword,
 	); err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrItemNotFound
 		}
 

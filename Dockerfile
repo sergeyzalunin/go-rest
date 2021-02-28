@@ -1,5 +1,7 @@
 FROM golang:1.15.8-alpine
 
+ARG DATABASE_URL
+
 WORKDIR /opt/code
 ADD . /opt/code
 

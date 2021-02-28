@@ -1,6 +1,9 @@
 FROM golang:1.15.8-alpine
 
 ARG DATABASE_URL
+ARG BIND_ADDR
+
+ENV BIND_ADDR=${BIND_ADDR}
 
 WORKDIR /opt/code
 ADD . /opt/code
